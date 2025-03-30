@@ -1,0 +1,5 @@
+sceneSetups:
+- path: Assets/TerrainDemoScene_URP/Scenes/TerrainDemoScene.unity
+  isLoaded: 1
+  isActive: 1
+  isSubScene: 0
