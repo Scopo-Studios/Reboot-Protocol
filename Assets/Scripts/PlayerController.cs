@@ -8,7 +8,6 @@ public class PlayerController : MonoBehaviour
     private float speed = 5.0f;
     private float horizontalInput;
     private float verticalInput;
-    private float leftClick;
     private float mouseInputV;
     private float mouseInputH;
     private float mouseSensitivity = 100f;
@@ -21,6 +20,7 @@ public class PlayerController : MonoBehaviour
     public bool use;
     public bool pickUp;
     private AnimatorStateInfo stateInfo;
+    
     // Start is called before the first frame update
     void Start()
     {
@@ -42,6 +42,9 @@ public class PlayerController : MonoBehaviour
         else if (Input.GetKeyDown(KeyCode.F) && use){
             StartCoroutine(Use());
         }
+        else if (Input.GetMouseButtonDown(0)){
+            StartCoroutine(Shoot());
+        }
         if (delay){
             MoveAndAnimation();
         }
@@ -52,8 +55,6 @@ public class PlayerController : MonoBehaviour
         horizontalInput = Input.GetAxis("Horizontal");
         verticalInput = Input.GetAxis("Vertical");
         
-        
-        
         animator.SetFloat("Y", verticalInput);
         animator.SetFloat("X", horizontalInput);
         if (verticalInput != 0 || horizontalInput != 0){
@@ -63,15 +64,9 @@ public class PlayerController : MonoBehaviour
             animator.SetBool("RunStop", false);
         }
         
-       
-        
-        
         //Should change these to Rigidbody forces for movement for better collisions maybe
         transform.Translate(Vector3.forward * Time.deltaTime * speed * verticalInput);
         transform.Translate(Vector3.right * Time.deltaTime * speed * horizontalInput);
-        
-
-        
         
         if (verticalInput != 0 || horizontalInput != 0)
         {
@@ -100,6 +95,12 @@ public class PlayerController : MonoBehaviour
         delay = false;
         animator.SetTrigger("Pickup");
         yield return new WaitForSeconds(1.2f);
+        delay = true;
+    }
+
+    private IEnumerator Shoot(){
+        delay = false;
+        yield return new WaitForSeconds(0.3f);
         delay = true;
     }
 
