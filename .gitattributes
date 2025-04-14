@@ -40,3 +40,5 @@ Stars filter=lfs diff=lfs merge=lfs -text
 SkyboxStarSkybox04CubemapStars.cubemap filter=lfs diff=lfs merge=lfs -text
 D:CalPolyPomonaCS4700Reboot filter=lfs diff=lfs merge=lfs -text
 ProtocolAssetsReal filter=lfs diff=lfs merge=lfs -text
+AssetsReal filter=lfs diff=lfs merge=lfs -text
+Assets/Real[[:space:]]Stars[[:space:]]Skybox/StarSkybox04/CubemapStars.cubemap filter=lfs diff=lfs merge=lfs -text
