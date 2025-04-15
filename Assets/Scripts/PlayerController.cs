@@ -21,6 +21,10 @@ public class PlayerController : MonoBehaviour
     public bool pickUp;
     private AnimatorStateInfo stateInfo;
     
+    public float range = 100f;
+    public Camera cam;
+
+    public LayerMask enemyLayer;
     // Start is called before the first frame update
     void Start()
     {
@@ -99,10 +103,22 @@ public class PlayerController : MonoBehaviour
     }
 
     private IEnumerator Shoot(){
+        Ray ray = new Ray(cam.transform.position, cam.transform.forward);
+        RaycastHit hit;
         delay = false;
         animator.SetFloat("Y", 0);
         animator.SetFloat("X", 0);
         animator.SetBool("RunStop", true);
+        if (Physics.SphereCast(ray, 0.7f, out hit, range, enemyLayer))
+        {
+            
+            PatrolEnemy enemy = hit.transform.GetComponent<PatrolEnemy>();
+            if (enemy != null)
+            {
+                
+                enemy.TakeDamage();
+            }
+        }
         yield return new WaitForSeconds(0.3f);
         delay = true;
     }

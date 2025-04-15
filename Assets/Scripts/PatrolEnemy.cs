@@ -11,6 +11,7 @@ public class PatrolEnemy : MonoBehaviour
     public Rigidbody myRigidbody;
     private bool alerted;
     private bool chasing;
+    private bool hit;
     private Animator animator;
     private float rotationSpeed = 10f;
 
@@ -42,7 +43,9 @@ public class PatrolEnemy : MonoBehaviour
                 StartCoroutine(Rage());
             }
             else {
-                Chase();
+                if (!hit){
+                    Chase();
+                }
             }
             
         }
@@ -89,5 +92,16 @@ public class PatrolEnemy : MonoBehaviour
             currentPoint++;
             currentGoal = path[currentPoint];
         }
+    }
+
+    public void TakeDamage(){
+        
+        StartCoroutine(Hit());
+    }
+    private IEnumerator Hit(){
+        hit = true;
+        animator.SetTrigger("Hit");
+        yield return new WaitForSeconds(1.4f);
+        hit = false;
     }
 }
