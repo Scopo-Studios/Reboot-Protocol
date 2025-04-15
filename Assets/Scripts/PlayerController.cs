@@ -100,6 +100,9 @@ public class PlayerController : MonoBehaviour
 
     private IEnumerator Shoot(){
         delay = false;
+        animator.SetFloat("Y", 0);
+        animator.SetFloat("X", 0);
+        animator.SetBool("RunStop", true);
         yield return new WaitForSeconds(0.3f);
         delay = true;
     }
