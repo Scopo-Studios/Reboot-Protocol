@@ -8,17 +8,32 @@ public class PatrolEnemy : MonoBehaviour
     public Transform target;
     private float speed = 3f;
     public float chaseRadius = 10f;
+    public float attackRadius = 1.5f;
     public Rigidbody myRigidbody;
     private bool alerted;
     private bool chasing;
     private bool hit;
+    private bool attacking;
     private Animator animator;
     private float rotationSpeed = 10f;
+    public float health;
+    private bool dead = false;
+    private bool alertedByHit = false;
 
+    public AudioClip hurtSound;
+    public AudioClip rageSound;
+    public AudioClip footStepSound;
+    public float footStepDelay;
+    private float nextFootstep = 0;
+
+    private bool hitAnim = true;
+    private bool attackAnim = true;
     public Transform[] path;
     public int currentPoint;
     public Transform currentGoal;
     public float roundingDistance;
+
+    private bool attackCD = false;
 
     // Start is called before the first frame update
     void Start()
@@ -27,23 +42,32 @@ public class PatrolEnemy : MonoBehaviour
         target = GameObject.FindWithTag("Player").transform;
         alerted = false;
         chasing = false;
+        attacking = false;
         animator = GetComponent<Animator>();
         currentGoal = path[0];
+        
     }
 
     // Update is called once per frame
     void Update()
     {
         if (Vector3.Distance(target.position, transform.position) <= chaseRadius){
+            alertedByHit = false;
             alerted = true;
         }
+        if (Vector3.Distance(target.position, transform.position) <= attackRadius && !attacking){
+            StartCoroutine(Attack());
+        } 
+        
         if (alerted){
-            speed = 3f;
+            speed = 6f;
             if (!chasing){
                 StartCoroutine(Rage());
             }
             else {
-                if (!hit){
+                AnimatorStateInfo animState = animator.GetCurrentAnimatorStateInfo(0);
+                bool isAttackingAnim = animState.IsName("attack1LSpike") || animState.IsName("attack5");
+                if (!hit && !dead && !attacking && !isAttackingAnim){
                     Chase();
                 }
             }
@@ -51,12 +75,21 @@ public class PatrolEnemy : MonoBehaviour
         }
         else {
             if (Vector3.Distance(transform.position, path[currentPoint].position) > roundingDistance){
+                
+                footStepDelay = 0.8f;
                 Vector3 temp = Vector3.MoveTowards(transform.position, path[currentPoint].position, speed * Time.deltaTime);
                 Vector3 direction = currentGoal.position - transform.position;
                 direction.y = 0f;
                 Quaternion targetRotation = Quaternion.LookRotation(direction);
                 transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, rotationSpeed * Time.deltaTime);
                 myRigidbody.MovePosition(temp);
+                nextFootstep -= Time.deltaTime;
+                if (nextFootstep <= 0) 
+                {
+                    GetComponent<AudioSource>().PlayOneShot(footStepSound, 2f);
+                    nextFootstep += footStepDelay;
+                }
+                
             }
             else {
                 ChangeGoal();
@@ -65,21 +98,32 @@ public class PatrolEnemy : MonoBehaviour
     }
 
     void Chase(){
+        
+        footStepDelay = 0.3f;
         Vector3 temp = Vector3.MoveTowards(transform.position, target.position, speed * Time.deltaTime);
         Vector3 direction = target.position - transform.position;
         direction.y = 0f; 
         Quaternion targetRotation = Quaternion.LookRotation(direction);
         transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, rotationSpeed * Time.deltaTime);
         myRigidbody.MovePosition(temp);
+        nextFootstep -= Time.deltaTime;
+        if (nextFootstep <= 0) 
+        {
+            GetComponent<AudioSource>().PlayOneShot(footStepSound, 2f);
+            nextFootstep += footStepDelay;
+        }
+        
     }
 
     private IEnumerator Rage(){
+        GetComponent<AudioSource>().PlayOneShot(rageSound, 0.3f);
         Vector3 direction = target.position - transform.position;
         direction.y = 0f; 
         Quaternion targetRotation = Quaternion.LookRotation(direction);
         transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, rotationSpeed * Time.deltaTime);
-        animator.SetBool("Alerted", true);
+        if (!alertedByHit) animator.SetBool("Alerted", true);
         yield return new WaitForSeconds(2f);
+        if (alertedByHit) animator.SetBool("Alerted", true);
         chasing = true;
     }
 
@@ -95,13 +139,69 @@ public class PatrolEnemy : MonoBehaviour
     }
 
     public void TakeDamage(){
+        health--;
+        GetComponent<AudioSource>().PlayOneShot(hurtSound, 1f);
         
-        StartCoroutine(Hit());
+        if (health <= 0 && !dead) {
+            dead = true;
+            StartCoroutine(Die());
+        }
+        else if (!hit) StartCoroutine(Hit());
+        
+        
+        
+        
     }
     private IEnumerator Hit(){
         hit = true;
-        animator.SetTrigger("Hit");
-        yield return new WaitForSeconds(1.4f);
+        if (hitAnim){
+            animator.SetTrigger("Hit");
+            yield return new WaitForSeconds(0.7f);
+            hitAnim = false;
+        }
+        else {
+            animator.SetTrigger("Hit2");
+            yield return new WaitForSeconds(0.7f);
+            hitAnim = true;
+        }
         hit = false;
+        if (!alerted){
+            alerted = true;
+            alertedByHit = true;
+        } 
     }
+
+    private IEnumerator Die(){
+        animator.SetBool("Dead", true);
+        yield return new WaitForSeconds(4f);
+        this.gameObject.SetActive(false);
+    }
+
+    private IEnumerator Attack(){
+        animator.SetBool("Attacking", true);
+        attacking = true;
+        if (attackAnim){
+            animator.SetTrigger("Attack");
+            yield return new WaitWhile(() => animator.GetCurrentAnimatorStateInfo(0).normalizedTime < 1f);
+            attackAnim = false;
+        }
+        else {
+            animator.SetTrigger("Attack2");
+            yield return new WaitWhile(() => animator.GetCurrentAnimatorStateInfo(0).normalizedTime < 1f);
+            attackAnim = true;
+        }
+        animator.SetBool("Attacking", false);
+        attacking = false;
+        
+        
+
+    }
+
+    void OnTriggerEnter(Collider other){
+        if (other.CompareTag("Player") && !other.isTrigger){
+            other.GetComponent<PlayerController>().Hurt();
+        }
+    }
+
+    
 }

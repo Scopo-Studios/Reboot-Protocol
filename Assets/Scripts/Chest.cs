@@ -11,11 +11,13 @@ public class Chest : MonoBehaviour
     public GameObject player;
     private PlayerController playerControl;
     public GameObject prefabToInstantiate;
+    private Animator animator;
 
     void Start(){
         alreadyOpened = false;
         inRange = false;
         playerControl = player.GetComponent<PlayerController>();
+        animator = GetComponent<Animator>();
     }
 
     void Update(){
@@ -65,7 +67,7 @@ public class Chest : MonoBehaviour
     private IEnumerator Open(){
         yield return new WaitForSeconds(1.4f);
         Instantiate(prefabToInstantiate, transform);
-        lid.transform.localRotation = Quaternion.Euler(-135, 0, 0);
+        animator.SetBool("Opened", true);
         playerControl.use = false;
     }
 

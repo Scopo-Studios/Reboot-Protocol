@@ -13,12 +13,15 @@ public class PlayerController : MonoBehaviour
     private float mouseSensitivity = 100f;
     private Animator animator;
     private Vector3 oldPosition;
+    public AudioClip hurtSound;
+    public AudioClip gunSound;
     public AudioClip footStepSound;
     public float footStepDelay;
     private float nextFootstep = 0;
     private bool delay;
     public bool use;
     public bool pickUp;
+    private bool shootCD = true;
     private AnimatorStateInfo stateInfo;
     
     public float range = 100f;
@@ -46,8 +49,9 @@ public class PlayerController : MonoBehaviour
         else if (Input.GetKeyDown(KeyCode.F) && use){
             StartCoroutine(Use());
         }
-        else if (Input.GetMouseButtonDown(0)){
+        else if (Input.GetMouseButtonDown(0) && shootCD == true){
             StartCoroutine(Shoot());
+            StartCoroutine(ShootCoolDown());
         }
         if (delay){
             MoveAndAnimation();
@@ -103,6 +107,7 @@ public class PlayerController : MonoBehaviour
     }
 
     private IEnumerator Shoot(){
+        GetComponent<AudioSource>().PlayOneShot(gunSound, 0.7f);
         Ray ray = new Ray(cam.transform.position, cam.transform.forward);
         RaycastHit hit;
         delay = false;
@@ -123,5 +128,22 @@ public class PlayerController : MonoBehaviour
         delay = true;
     }
 
+    private IEnumerator ShootCoolDown(){
+        shootCD = false;
+        yield return new WaitForSeconds(1f);
+        shootCD = true;
+    }
+
+    public void Hurt(){
+        if (delay) StartCoroutine(GotHit());
+    }
+
+    private IEnumerator GotHit(){
+        GetComponent<AudioSource>().PlayOneShot(hurtSound, 1.5f);
+        delay = false;
+        animator.SetTrigger("Hit");
+        yield return new WaitForSeconds(0.5f);
+        delay = true;
+    }
     
 }
