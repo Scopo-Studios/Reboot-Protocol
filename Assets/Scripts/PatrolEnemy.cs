@@ -21,6 +21,9 @@ public class PatrolEnemy : MonoBehaviour
     private bool dead = false;
     private bool alertedByHit = false;
 
+    public bool attackCoolDown = false;
+    
+
     public AudioClip hurtSound;
     public AudioClip rageSound;
     public AudioClip footStepSound;
@@ -55,8 +58,10 @@ public class PatrolEnemy : MonoBehaviour
             alerted = true;
         }
         if (Vector3.Distance(target.position, transform.position) <= attackRadius){
-            if (!attacking){
+            if (!attacking && !attackCoolDown){
+                
                 StartCoroutine(Attack());
+                StartCoroutine(AttackCoolDown());
                 Debug.Log("attacked");
             }
         }
@@ -186,7 +191,6 @@ public class PatrolEnemy : MonoBehaviour
     {
         animator.SetBool("Attacking", true);
         attacking = true;
-
         // Choose animation
         if (attackAnim)
         {
@@ -202,6 +206,14 @@ public class PatrolEnemy : MonoBehaviour
         }
         animator.SetBool("Attacking", false);
         attacking = false;
+    }
+
+    private IEnumerator AttackCoolDown()
+    {
+        attackCoolDown = true;
+        yield return new WaitForSeconds(1.5f);
+        attackCoolDown = false;
+
     }
 
 
