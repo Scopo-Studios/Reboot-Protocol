@@ -201,11 +201,28 @@ public class PatrolEnemy : MonoBehaviour
             attackAnim = true;
         }
 
+<<<<<<< HEAD
+=======
+        // Check if player is still within attack range before applying damage
+        if (Vector3.Distance(target.position, transform.position) <= attackRadius)
+        {
+            PlayerController player = target.GetComponent<PlayerController>();
+            if (player != null)
+            {
+                player.TakeDamage(1);  // You can adjust the damage value as needed
+            }
+        }
+
+>>>>>>> d5ce5c5e86023e1742e302287ae19f4eb1ab0eaa
         animator.SetBool("Attacking", false);
         attacking = false;
     }
 
+<<<<<<< HEAD
     //Check if player is in the attack box collider
+=======
+
+>>>>>>> d5ce5c5e86023e1742e302287ae19f4eb1ab0eaa
     void OnTriggerEnter(Collider other){
         if (other.CompareTag("Player") && !other.isTrigger){
             other.GetComponent<PlayerController>().TakeDamage(1);

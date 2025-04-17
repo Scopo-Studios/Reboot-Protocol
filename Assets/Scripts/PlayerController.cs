@@ -148,10 +148,17 @@ public class PlayerController : MonoBehaviour
 
     public void TakeDamage(int damage)
     {
+<<<<<<< HEAD
         if (delay) StartCoroutine(GotHit());
         health -= damage;
         Debug.Log("Player took " + damage + " damage! Health: " + health);
         
+=======
+        health -= damage;
+        Debug.Log("Player took " + damage + " damage! Health: " + health);
+        GetComponent<AudioSource>().PlayOneShot(hurtSound, 1.5f);
+        animator.SetTrigger("Hit");
+>>>>>>> d5ce5c5e86023e1742e302287ae19f4eb1ab0eaa
 
         if (health <= 0)
         {
