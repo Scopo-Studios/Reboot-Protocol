@@ -125,6 +125,13 @@ public class PlayerController : MonoBehaviour
                 
                 enemy.TakeDamage();
             }
+            SleepEnemy enemy2 = hit.transform.GetComponent<SleepEnemy>();
+            if (enemy2 != null)
+            {
+                
+                enemy2.TakeDamage();
+                
+            }
         }
         yield return new WaitForSeconds(0.3f);
         delay = true;

@@ -62,7 +62,7 @@ public class PatrolEnemy : MonoBehaviour
                 
                 StartCoroutine(Attack());
                 StartCoroutine(AttackCoolDown());
-                Debug.Log("attacked");
+                
             }
         }
         if (alerted){
