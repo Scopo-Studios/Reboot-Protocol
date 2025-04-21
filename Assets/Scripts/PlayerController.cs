@@ -130,7 +130,7 @@ public class PlayerController : MonoBehaviour
             {
                 
                 enemy2.TakeDamage();
-                Debug.Log("Hit");
+                
             }
         }
         yield return new WaitForSeconds(0.3f);
