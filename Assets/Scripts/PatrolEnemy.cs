@@ -36,7 +36,7 @@ public class PatrolEnemy : MonoBehaviour
     public int currentPoint;
     public Transform currentGoal;
     public float roundingDistance;
-
+    private int direction = 1;
     // Start is called before the first frame update
     void Start()
     {
@@ -47,7 +47,7 @@ public class PatrolEnemy : MonoBehaviour
         attacking = false;
         animator = GetComponent<Animator>();
         currentGoal = path[0];
-        
+        direction = 1;
     }
 
     // Update is called once per frame
@@ -66,7 +66,7 @@ public class PatrolEnemy : MonoBehaviour
             }
         }
         if (alerted){
-            speed = 6f;
+            speed = 10f;
             if (!chasing){
                 if (!raged){
                     StartCoroutine(Rage());
@@ -108,7 +108,6 @@ public class PatrolEnemy : MonoBehaviour
     }
 
     void Chase(){
-        
         footStepDelay = 0.3f;
         Vector3 temp = Vector3.MoveTowards(transform.position, target.position, speed * Time.deltaTime);
         Vector3 direction = target.position - transform.position;
@@ -138,12 +137,13 @@ public class PatrolEnemy : MonoBehaviour
     }
 
     private void ChangeGoal(){
-        if (currentPoint == path.Length - 1){
-            currentPoint = 0;
-            currentGoal = path[0];
+        if (currentPoint == path.Length - 1 || currentPoint == 0){
+            direction *= -1;
+            currentPoint += direction;
+            currentGoal = path[currentPoint];
         }
         else {
-            currentPoint++;
+            currentPoint += direction;
             currentGoal = path[currentPoint];
         }
     }

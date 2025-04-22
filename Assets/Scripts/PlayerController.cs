@@ -10,11 +10,12 @@ public class PlayerController : MonoBehaviour
     private float verticalInput;
     private float mouseInputV;
     private float mouseInputH;
-    private float mouseSensitivity = 100f;
+    private float mouseSensitivity = 150f;
     private Animator animator;
     private Vector3 oldPosition;
     public AudioClip hurtSound;
     public AudioClip gunSound;
+    public AudioClip missSound;
     public AudioClip footStepSound;
     public float footStepDelay;
     private float nextFootstep = 0;
@@ -133,10 +134,16 @@ public class PlayerController : MonoBehaviour
                 
             }
         }
+        else {
+            StartCoroutine(MissSound());
+        }
         yield return new WaitForSeconds(0.3f);
         delay = true;
     }
-
+    private IEnumerator MissSound(){
+        yield return new WaitForSeconds(0.3f);
+        GetComponent<AudioSource>().PlayOneShot(missSound, 0.7f);
+    }
     private IEnumerator ShootCoolDown(){
         shootCD = false;
         yield return new WaitForSeconds(1f);
