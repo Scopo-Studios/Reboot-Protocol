@@ -40,18 +40,23 @@ public class PatrolEnemy : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+    
         myRigidbody = GetComponent<Rigidbody>();
         target = GameObject.FindWithTag("Player").transform;
         alerted = false;
         chasing = false;
         attacking = false;
         animator = GetComponent<Animator>();
+        if (animator != null)
+        {
+            animator.cullingMode = AnimatorCullingMode.AlwaysAnimate;
+        }
         currentGoal = path[0];
         direction = 1;
     }
 
     // Update is called once per frame
-    void Update()
+    void FixedUpdate()
     {
         if (Vector3.Distance(target.position, transform.position) <= chaseRadius){
             alertedByHit = false;
@@ -66,7 +71,7 @@ public class PatrolEnemy : MonoBehaviour
             }
         }
         if (alerted){
-            speed = 10f;
+            speed = 8f;
             if (!chasing){
                 if (!raged){
                     StartCoroutine(Rage());

@@ -2364,6 +2364,11 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 6952404746478495921, guid: 3bf3b95501d237043baf191f1ace6c5a,
+        type: 3}
+      propertyPath: m_CullingMode
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 7441973178291385884, guid: 3bf3b95501d237043baf191f1ace6c5a,
         type: 3}
       propertyPath: currentPoint
@@ -2432,7 +2437,7 @@ PrefabInstance:
     - target: {fileID: 8531963526182682076, guid: 3bf3b95501d237043baf191f1ace6c5a,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 10.440037
+      value: 10.66
       objectReference: {fileID: 0}
     - target: {fileID: 8531963526182682076, guid: 3bf3b95501d237043baf191f1ace6c5a,
         type: 3}
