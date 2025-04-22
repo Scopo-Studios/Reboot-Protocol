@@ -6,7 +6,7 @@ public class PatrolEnemy : MonoBehaviour
 {
 
     public Transform target;
-    private float speed = 3f;
+    public float speed = 3f;
     public float chaseRadius = 10f;
     public float attackRadius = 1.5f;
     public Rigidbody myRigidbody;
