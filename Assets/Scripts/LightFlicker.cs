@@ -14,7 +14,7 @@
  
      public void Reset()
      {
-         maximumDim = 0.2f;
+         maximumDim = 9f;
          maximumBoost = 0.2f;
          speed = 0.1f;
          strength = 250;
@@ -33,7 +33,7 @@
          while (!noFlicker)
          {
              source.intensity = Mathf.Lerp(source.intensity, Random.Range(initialIntensity - maximumDim, initialIntensity + maximumBoost), strength * Time.deltaTime);
-             yield return new WaitForSeconds(speed);
+             yield return new WaitForSeconds(Random.Range(speed * 0.5f, speed * 1.5f));
          }
      }
  }

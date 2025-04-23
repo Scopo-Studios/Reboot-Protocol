@@ -6,24 +6,23 @@
      public AudioSource randomSound;
      public AudioClip[] audioSources;
 
-     public int clipDelay = 5;
+     public float minDelay = 3f;
+    public float maxDelay = 7f;
  
      // Use this for initialization
      void Start () {
- 
-         StartAudio ();
-     }
- 
- 
-     void StartAudio()
-     {
-         Invoke ("RandomSoundness", clipDelay);
-     }
- 
-     void RandomSoundness()
-     {
-         randomSound.clip = audioSources[Random.Range(0, audioSources.Length)];
-         randomSound.Play ();
-         StartAudio ();
-     }
+        randomSound = GetComponent<AudioSource>();
+        
+        StartCoroutine(PlayRandomClip());
+    }
+
+    IEnumerator PlayRandomClip()
+    {
+        while (true)
+        {
+            yield return new WaitForSeconds(Random.Range(minDelay, maxDelay));
+            AudioClip clip = audioSources[Random.Range(0, audioSources.Length)];
+            randomSound.PlayOneShot(clip, 0.5f);
+        }
+    }
  }

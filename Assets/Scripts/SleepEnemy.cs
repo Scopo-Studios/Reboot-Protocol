@@ -46,7 +46,7 @@ public class SleepEnemy : MonoBehaviour
     }
 
     // Update is called once per frame
-    void Update()
+    void FixedUpdate()
     {
         if (Vector3.Distance(target.position, transform.position) <= chaseRadius){
             alerted = true;
