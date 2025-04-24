@@ -157,6 +157,7 @@ public class PlayerController : MonoBehaviour
             health -= damage; // or however much damage you want
             StartCoroutine(GotHit());
         }
+        Debug.Log("Health: " + health);
     }
 
 
