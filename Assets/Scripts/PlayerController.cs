@@ -23,7 +23,7 @@ public class PlayerController : MonoBehaviour
     public bool pickUp;
     private bool shootCD = true;
     private AnimatorStateInfo stateInfo;
-    public int health = 100; // Max 100, min 0
+    public int health = 5;
 
 
     public float range = 100f;
@@ -136,32 +136,55 @@ public class PlayerController : MonoBehaviour
         shootCD = true;
     }
 
-    public void Hurt()
-    {
-        if (delay && health > 0)
-        {
-            health -= 30; // or however much damage you want
-            StartCoroutine(GotHit());
-        }
-    }
+    
 
-
-    private IEnumerator GotHit()
-    {
+    private IEnumerator GotHit(){
         GetComponent<AudioSource>().PlayOneShot(hurtSound, 1.5f);
-        animator.SetTrigger("Hit");
         delay = false;
-
-        if (health <= 0)
-        {
-            // Optional: death animation or game over logic
-            Debug.Log("Player died!");
-            // You could disable movement, play a death anim, etc.
-        }
-
+        animator.SetTrigger("Hit");
         yield return new WaitForSeconds(0.5f);
         delay = true;
     }
 
+    public void TakeDamage(int damage)
+    {
+
+        if (delay) StartCoroutine(GotHit());
+        health -= damage;
+        Debug.Log("Player took " + damage + " damage! Health: " + health);
+        
+
+
+        if (health <= 0)
+        {
+            Die();
+        }
+    }
+
+    private void Die()
+    {
+        Debug.Log("Player has died.");
+        /* Player.GetComponent<ThirdPersonConroller)()enabled = false;
+        Cursor.visible = true;
+        Cursor.lockState = CursorLockMode.None;
+        hud.SetActive(false);
+        inv.SetActive(false);
+        deathScreen.SetActive(true); */
+
+    }
+
+
+    public void Heal(int amount)
+    {
+        health += amount;
+
+        // Cap health at 5
+        if (health > 5)
+        {
+            health = 5;
+        }
+
+        Debug.Log("Healed! Current Health: " + health);
+    }
 
 }
