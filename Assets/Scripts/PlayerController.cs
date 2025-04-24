@@ -24,7 +24,7 @@ public class PlayerController : MonoBehaviour
     public bool pickUp;
     private bool shootCD = true;
     private AnimatorStateInfo stateInfo;
-    public int health = 5;
+    public int health = 100; // Max 100, min 0
 
 
     public float range = 100f;
@@ -150,55 +150,41 @@ public class PlayerController : MonoBehaviour
         shootCD = true;
     }
 
-    
-
-    private IEnumerator GotHit(){
-        GetComponent<AudioSource>().PlayOneShot(hurtSound, 1.5f);
-        delay = false;
-        animator.SetTrigger("Hit");
-        yield return new WaitForSeconds(0.5f);
-        delay = true;
-    }
-
     public void TakeDamage(int damage)
     {
+        if (delay && health > 0)
+        {
+            health -= damage; // or however much damage you want
+            StartCoroutine(GotHit());
+        }
+    }
 
-        if (delay) StartCoroutine(GotHit());
-        health -= damage;
-        Debug.Log("Player took " + damage + " damage! Health: " + health);
-        
 
+    private IEnumerator GotHit()
+    {
+        GetComponent<AudioSource>().PlayOneShot(hurtSound, 1.5f);
+        animator.SetTrigger("Hit");
+        delay = false;
 
         if (health <= 0)
         {
-            Die();
+            // Optional: death animation or game over logic
+            Debug.Log("Player died!");
+            // You could disable movement, play a death anim, etc.
         }
+
+        yield return new WaitForSeconds(0.5f);
+        delay = true;
     }
-
-    private void Die()
-    {
-        Debug.Log("Player has died.");
-        /* Player.GetComponent<ThirdPersonConroller)()enabled = false;
-        Cursor.visible = true;
-        Cursor.lockState = CursorLockMode.None;
-        hud.SetActive(false);
-        inv.SetActive(false);
-        deathScreen.SetActive(true); */
-
-    }
-
-
-    public void Heal(int amount)
-    {
+    
+    public void Heal(int amount){
         health += amount;
-
-        // Cap health at 5
-        if (health > 5)
+        if (health > 100)
         {
-            health = 5;
+            health = 100;
         }
-
         Debug.Log("Healed! Current Health: " + health);
     }
+
 
 }

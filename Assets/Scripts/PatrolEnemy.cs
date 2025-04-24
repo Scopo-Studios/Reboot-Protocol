@@ -22,7 +22,6 @@ public class PatrolEnemy : MonoBehaviour
     private bool alertedByHit = false;
 
     public bool attackCoolDown = false;
-    
 
     public AudioClip hurtSound;
     public AudioClip rageSound;
@@ -72,6 +71,7 @@ public class PatrolEnemy : MonoBehaviour
                 Debug.Log("attacked");
             }
         }
+        
         if (alerted){
             speed = 8f;
             if (!chasing){
@@ -86,7 +86,6 @@ public class PatrolEnemy : MonoBehaviour
                 if (!hit && !dead && !attacking && !isAttackingAnim){
                     Chase();
                 }
-                
             }
             
         }
@@ -194,36 +193,31 @@ public class PatrolEnemy : MonoBehaviour
         this.gameObject.SetActive(false);
     }
 
-    private IEnumerator Attack()
-    {
+    private IEnumerator Attack(){
         animator.SetBool("Attacking", true);
         attacking = true;
-        // Choose animation
-        if (attackAnim)
-        {
+        if (attackAnim){
             animator.SetTrigger("Attack");
             yield return new WaitWhile(() => animator.GetCurrentAnimatorStateInfo(0).normalizedTime < 1f);
             attackAnim = false;
         }
-        else
-        {
+        else {
             animator.SetTrigger("Attack2");
             yield return new WaitWhile(() => animator.GetCurrentAnimatorStateInfo(0).normalizedTime < 1f);
             attackAnim = true;
         }
         animator.SetBool("Attacking", false);
         attacking = false;
-    }
+        
+        
 
+    }
     private IEnumerator AttackCoolDown()
     {
         attackCoolDown = true;
         yield return new WaitForSeconds(1.5f);
         attackCoolDown = false;
-
     }
-
-
     //Check if player is in the attack box collider
     void OnTriggerEnter(Collider other){
         if (other.CompareTag("Player") && !other.isTrigger){
