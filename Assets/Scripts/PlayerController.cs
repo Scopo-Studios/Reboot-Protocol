@@ -23,7 +23,9 @@ public class PlayerController : MonoBehaviour
     public bool pickUp;
     private bool shootCD = true;
     private AnimatorStateInfo stateInfo;
-    
+    public int health = 100; // Max 100, min 0
+
+
     public float range = 100f;
     public Camera cam;
 
@@ -134,16 +136,32 @@ public class PlayerController : MonoBehaviour
         shootCD = true;
     }
 
-    public void Hurt(){
-        if (delay) StartCoroutine(GotHit());
+    public void Hurt()
+    {
+        if (delay && health > 0)
+        {
+            health -= 30; // or however much damage you want
+            StartCoroutine(GotHit());
+        }
     }
 
-    private IEnumerator GotHit(){
+
+    private IEnumerator GotHit()
+    {
         GetComponent<AudioSource>().PlayOneShot(hurtSound, 1.5f);
-        delay = false;
         animator.SetTrigger("Hit");
+        delay = false;
+
+        if (health <= 0)
+        {
+            // Optional: death animation or game over logic
+            Debug.Log("Player died!");
+            // You could disable movement, play a death anim, etc.
+        }
+
         yield return new WaitForSeconds(0.5f);
         delay = true;
     }
-    
+
+
 }
