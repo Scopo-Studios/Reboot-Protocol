@@ -36,7 +36,11 @@ public class PatrolEnemy : MonoBehaviour
     public int currentPoint;
     public Transform currentGoal;
     public float roundingDistance;
+<<<<<<< Updated upstream
     private int direction = 1;
+=======
+    private int direction;
+>>>>>>> Stashed changes
     // Start is called before the first frame update
     void Start()
     {
