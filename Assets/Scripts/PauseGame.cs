@@ -7,16 +7,23 @@ public class PauseGame : MonoBehaviour
     public GameObject menu;
     public GameObject resume;
     public GameObject quit;
-    public GameObject loadingCanvas; // <-- assign this in Inspector
-    public string mainMenuSceneName = "MainMenu"; // <-- set to your main menu scene name
+
+    public GameObject loadingCanvas;
+    public string mainMenuSceneName = "MainMenu";
 
     private bool isPaused = false;
+    private PlayerController playerController; // Reference to PlayerController
 
     void Start()
     {
         menu.SetActive(false);
+
         if (loadingCanvas != null) loadingCanvas.SetActive(false);
+
         Time.timeScale = 1f;
+
+        // Find PlayerController in scene
+        playerController = FindObjectOfType<PlayerController>();
     }
 
     void Update()
@@ -35,6 +42,9 @@ public class PauseGame : MonoBehaviour
 
         Cursor.lockState = isPaused ? CursorLockMode.None : CursorLockMode.Locked;
         Cursor.visible = isPaused;
+
+        if (playerController != null)
+            playerController.canShoot = !isPaused; // Disable shooting when paused
     }
 
     public void Resume()
@@ -44,6 +54,9 @@ public class PauseGame : MonoBehaviour
         Time.timeScale = 1f;
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
+
+        if (playerController != null)
+            playerController.canShoot = true;
     }
 
     public void Exit()
@@ -53,14 +66,12 @@ public class PauseGame : MonoBehaviour
 
     private IEnumerator ExitToMainMenu()
     {
-        // Reset player progress (example using PlayerPrefs)
-        PlayerPrefs.DeleteAll(); // ← clears saved progress
+        PlayerPrefs.DeleteAll();
 
         if (loadingCanvas != null) loadingCanvas.SetActive(true);
-        Time.timeScale = 1f; // unpause the game before switching
+        Time.timeScale = 1f;
 
-        yield return new WaitForSeconds(1f); // optional delay for loading effect
-
+        yield return new WaitForSeconds(1f);
         SceneManager.LoadScene(mainMenuSceneName);
     }
 }
