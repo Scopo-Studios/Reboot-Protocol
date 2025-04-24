@@ -36,6 +36,9 @@ public class PatrolEnemy : MonoBehaviour
     public int currentPoint;
     public Transform currentGoal;
     public float roundingDistance;
+
+    private int direction;
+
     // Start is called before the first frame update
     void Start()
     {
