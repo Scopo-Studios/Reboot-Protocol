@@ -36,7 +36,7 @@ public class PatrolEnemy : MonoBehaviour
     public Transform currentGoal;
     public float roundingDistance;
 
-    private int direction;
+    private int directions  ;
 
     // Start is called before the first frame update
     void Start()
@@ -53,7 +53,7 @@ public class PatrolEnemy : MonoBehaviour
             animator.cullingMode = AnimatorCullingMode.AlwaysAnimate;
         }
         currentGoal = path[0];
-        
+        directions = 1;
     }
 
     // Update is called once per frame
@@ -144,14 +144,15 @@ public class PatrolEnemy : MonoBehaviour
 
     private void ChangeGoal(){
         if (currentPoint == path.Length - 1 || currentPoint == 0){
-            direction *= -1;
-            currentPoint += direction;
+            directions *= -1;
+            currentPoint += directions;
             currentGoal = path[currentPoint];
         }
         else {
-            currentPoint += direction;
+            currentPoint += directions;
             currentGoal = path[currentPoint];
         }
+        
     }
 
     public void TakeDamage(){

@@ -41,6 +41,7 @@ public class Door : MonoBehaviour
                 playerControl.use = true;
             }
             inRange = true;
+            transform.Find("Pop-up").gameObject.SetActive(true);
         }
     }
 
@@ -51,6 +52,7 @@ public class Door : MonoBehaviour
                 playerControl.use = false;
             }
             inRange = false;
+            transform.Find("Pop-up").gameObject.SetActive(false);
         }
     }
 

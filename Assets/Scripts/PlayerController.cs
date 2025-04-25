@@ -57,6 +57,9 @@ public class PlayerController : MonoBehaviour
             StartCoroutine(Shoot());
             StartCoroutine(ShootCoolDown());
         }
+        else if (Input.GetKeyDown(KeyCode.R)){
+            StartCoroutine(Reload());
+        }
 
         if (delay)
         {
@@ -120,15 +123,21 @@ public class PlayerController : MonoBehaviour
         delay = true;
     }
 
+    private IEnumerator Reload()
+    {
+        delay = false;
+        animator.SetTrigger("Reload");
+        yield return new WaitForSeconds(0.8f);
+        delay = true;
+    }
+
     private IEnumerator Shoot()
     {
         GetComponent<AudioSource>().PlayOneShot(gunSound, 0.7f);
         Ray ray = new Ray(cam.transform.position, cam.transform.forward);
         RaycastHit hit;
         delay = false;
-        animator.SetFloat("Y", 0);
-        animator.SetFloat("X", 0);
-        animator.SetBool("RunStop", true);
+        animator.SetTrigger("Shoot");
 
         if (Physics.SphereCast(ray, 0.7f, out hit, range, enemyLayer))
         {
