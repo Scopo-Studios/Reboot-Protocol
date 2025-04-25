@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
-
     private float speed = 5.0f;
     private float horizontalInput;
     private float verticalInput;
@@ -26,12 +25,13 @@ public class PlayerController : MonoBehaviour
     private AnimatorStateInfo stateInfo;
     public int health = 100; // Max 100, min 0
 
+    public bool canShoot = true; // <--- NEW FLAG FOR SHOOT CONTROL
 
     public float range = 100f;
     public Camera cam;
 
     public LayerMask enemyLayer;
-    // Start is called before the first frame update
+
     void Start()
     {
         Cursor.lockState = CursorLockMode.Locked;
@@ -42,47 +42,57 @@ public class PlayerController : MonoBehaviour
         pickUp = false;
     }
 
-    // Update is called once per frame
     void Update()
     {
-        
-        if (Input.GetKeyDown(KeyCode.E) && pickUp){
+        if (Input.GetKeyDown(KeyCode.E) && pickUp)
+        {
             StartCoroutine(PickUp());
         }
-        else if (Input.GetKeyDown(KeyCode.F) && use){
+        else if (Input.GetKeyDown(KeyCode.F) && use)
+        {
             StartCoroutine(Use());
         }
-        else if (Input.GetMouseButtonDown(0) && shootCD == true){
+        else if (canShoot && Input.GetMouseButtonDown(0) && shootCD == true) // <--- UPDATED
+        {
             StartCoroutine(Shoot());
             StartCoroutine(ShootCoolDown());
         }
-        if (delay){
+        else if (Input.GetKeyDown(KeyCode.R)){
+            StartCoroutine(Reload());
+        }
+
+        if (delay)
+        {
             MoveAndAnimation();
         }
+
         Look();
     }
 
-    void MoveAndAnimation(){
+    void MoveAndAnimation()
+    {
         horizontalInput = Input.GetAxis("Horizontal");
         verticalInput = Input.GetAxis("Vertical");
-        
+
         animator.SetFloat("Y", verticalInput);
         animator.SetFloat("X", horizontalInput);
-        if (verticalInput != 0 || horizontalInput != 0){
+
+        if (verticalInput != 0 || horizontalInput != 0)
+        {
             animator.SetBool("RunStop", true);
         }
-        else {
+        else
+        {
             animator.SetBool("RunStop", false);
         }
-        
-        //Should change these to Rigidbody forces for movement for better collisions maybe
+
         transform.Translate(Vector3.forward * Time.deltaTime * speed * verticalInput);
         transform.Translate(Vector3.right * Time.deltaTime * speed * horizontalInput);
-        
+
         if (verticalInput != 0 || horizontalInput != 0)
         {
             nextFootstep -= Time.deltaTime;
-            if (nextFootstep <= 0) 
+            if (nextFootstep <= 0)
             {
                 GetComponent<AudioSource>().PlayOneShot(footStepSound, 0.7f);
                 nextFootstep += footStepDelay;
@@ -90,61 +100,76 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    void Look(){
+    void Look()
+    {
         mouseInputV = Input.GetAxis("Mouse X") * mouseSensitivity * Time.deltaTime;
         mouseInputH = Input.GetAxis("Mouse Y") * mouseSensitivity * Time.deltaTime;
         transform.Rotate(Vector3.up * mouseInputV);
     }
-    private IEnumerator Use(){
+
+    private IEnumerator Use()
+    {
         delay = false;
         animator.SetTrigger("Use");
         yield return new WaitForSeconds(1.4f);
         delay = true;
     }
 
-    private IEnumerator PickUp(){
+    private IEnumerator PickUp()
+    {
         delay = false;
         animator.SetTrigger("Pickup");
         yield return new WaitForSeconds(1.2f);
         delay = true;
     }
 
-    private IEnumerator Shoot(){
+    private IEnumerator Reload()
+    {
+        delay = false;
+        animator.SetTrigger("Reload");
+        yield return new WaitForSeconds(0.8f);
+        delay = true;
+    }
+
+    private IEnumerator Shoot()
+    {
         GetComponent<AudioSource>().PlayOneShot(gunSound, 0.7f);
         Ray ray = new Ray(cam.transform.position, cam.transform.forward);
         RaycastHit hit;
         delay = false;
-        animator.SetFloat("Y", 0);
-        animator.SetFloat("X", 0);
-        animator.SetBool("RunStop", true);
+        animator.SetTrigger("Shoot");
+
         if (Physics.SphereCast(ray, 0.7f, out hit, range, enemyLayer))
         {
-            
             PatrolEnemy enemy = hit.transform.GetComponent<PatrolEnemy>();
             if (enemy != null)
             {
-                
                 enemy.TakeDamage();
             }
+
             SleepEnemy enemy2 = hit.transform.GetComponent<SleepEnemy>();
             if (enemy2 != null)
             {
-                
                 enemy2.TakeDamage();
-                
             }
         }
-        else {
+        else
+        {
             StartCoroutine(MissSound());
         }
+
         yield return new WaitForSeconds(0.3f);
         delay = true;
     }
-    private IEnumerator MissSound(){
+
+    private IEnumerator MissSound()
+    {
         yield return new WaitForSeconds(0.3f);
         GetComponent<AudioSource>().PlayOneShot(missSound, 0.7f);
     }
-    private IEnumerator ShootCoolDown(){
+
+    private IEnumerator ShootCoolDown()
+    {
         shootCD = false;
         yield return new WaitForSeconds(1f);
         shootCD = true;
@@ -154,11 +179,10 @@ public class PlayerController : MonoBehaviour
     {
         if (delay && health > 0)
         {
-            health -= damage; // or however much damage you want
+            health -= damage;
             StartCoroutine(GotHit());
         }
     }
-
 
     private IEnumerator GotHit()
     {
@@ -168,16 +192,15 @@ public class PlayerController : MonoBehaviour
 
         if (health <= 0)
         {
-            // Optional: death animation or game over logic
             Debug.Log("Player died!");
-            // You could disable movement, play a death anim, etc.
         }
 
         yield return new WaitForSeconds(0.5f);
         delay = true;
     }
-    
-    public void Heal(int amount){
+
+    public void Heal(int amount)
+    {
         health += amount;
         if (health > 100)
         {
@@ -185,6 +208,4 @@ public class PlayerController : MonoBehaviour
         }
         Debug.Log("Healed! Current Health: " + health);
     }
-
-
 }

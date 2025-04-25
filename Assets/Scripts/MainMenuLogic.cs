@@ -32,7 +32,7 @@ public class MainMenuLogic : MonoBehaviour
         loading.GetComponent<Canvas>().enabled = true;
         mainMenu.GetComponent<Canvas>().enabled = false;
         yield return new WaitForSeconds(1f); // Optional loading delay
-        SceneManager.LoadScene("ForestTutorial");
+        SceneManager.LoadScene("Tutorial");
     }
 
     public void OptionsButton()
