@@ -1,0 +1,20 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1045 &1
+EditorBuildSettings:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Scenes:
+  - enabled: 1
+    path: Assets/Scenes/MainMenu.unity
+    guid: d11ee53356c0c4ec3b38d8f9de5ec53a
+  - enabled: 1
+    path: Assets/Scenes/Tutorial.unity
+    guid: eff66949880cde04184c3f2cc773e14f
+  - enabled: 1
+    path: Assets/Scenes/SpaceshipLevel.unity
+    guid: 0198b27c68e905b4a8fa804b1825840f
+  - enabled: 1
+    path: Assets/Scenes/SciFi_Warehouse.unity
+    guid: d30cd8c755bbc464194bc7b6a3c6e157
+  m_configObjects: {}

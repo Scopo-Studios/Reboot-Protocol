@@ -1,0 +1,16 @@
+fileFormatVersion: 2
+guid: bde46226008810248a98bbdd93eac25d
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - fine: {fileID: -209407466, guid: d30c365b09f2f45be91686028625c446, type: 3}
+  - caution: {fileID: 2121686396, guid: d30c365b09f2f45be91686028625c446, type: 3}
+  - danger: {fileID: 560901042, guid: d30c365b09f2f45be91686028625c446, type: 3}
+  - condition: {instanceID: 0}
+  - playerController: {instanceID: 0}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
