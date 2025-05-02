@@ -222,7 +222,7 @@ public class PatrolEnemy : MonoBehaviour
     //Check if player is in the attack box collider
     void OnTriggerEnter(Collider other){
         if (other.CompareTag("Player") && !other.isTrigger){
-            other.GetComponent<PlayerController>().TakeDamage(1);
+            other.GetComponent<PlayerController>().TakeDamage(25);
         }
     }
 

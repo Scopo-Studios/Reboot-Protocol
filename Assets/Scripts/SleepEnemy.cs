@@ -156,7 +156,7 @@ public class SleepEnemy : MonoBehaviour
     //Check if player is in the attack box collider
     public void ChildOnTriggerEnter(Collider other){
         if (other.CompareTag("Player") && !other.isTrigger){
-            other.GetComponent<PlayerController>().TakeDamage(10);
+            other.GetComponent<PlayerController>().TakeDamage(40);
         }
     }
 
