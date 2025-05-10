@@ -30,6 +30,7 @@ public class AmmoUICounter : MonoBehaviour
         {
             Debug.Log("Clip empty! Need to reload.");
         }
+
     }
 
     public void ReloadClip()
@@ -52,21 +53,26 @@ public class AmmoUICounter : MonoBehaviour
     }
 
     public void UpdateAmmoUI(bool empty)
-{
-    clipCount.text = currentClipSize.ToString();
-
-    if (empty)
     {
-        int backpackAmmo = ammoItem.numberHeld - currentClipSize;
-
-        if (backpackAmmo <= 0)
+        if (currentClipSize > ammoItem.numberHeld)
         {
-            ammoTotal.text = "0";
+            currentClipSize = ammoItem.numberHeld;
         }
-        else
+
+        clipCount.text = currentClipSize.ToString();
+
+        if (empty)
         {
-            ammoTotal.text = backpackAmmo.ToString();
+            int backpackAmmo = ammoItem.numberHeld - currentClipSize;
+
+            if (backpackAmmo <= 0)
+            {
+                ammoTotal.text = "0";
+            }
+            else
+            {
+                ammoTotal.text = backpackAmmo.ToString();
+            }
         }
     }
-}
 }

@@ -3,10 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class SpaceShipTeleport : MonoBehaviour
+public class SpaceshipEntrance : MonoBehaviour
 {
-
-    public AudioClip engineSound;
     void OnTriggerEnter(Collider other){
         if (other.CompareTag("Player") && !other.isTrigger){
             StartCoroutine(Teleport());
@@ -14,9 +12,8 @@ public class SpaceShipTeleport : MonoBehaviour
     }
     private IEnumerator Teleport()
     {
-        GetComponent<AudioSource>().PlayOneShot(engineSound, 7f);
-        yield return new WaitForSeconds(3.8f);
+        yield return new WaitForSeconds(1.0f);
         
-        SceneManager.LoadScene("SciFi_Warehouse");
+        SceneManager.LoadScene("SpaceshipLevel");
     }
 }
